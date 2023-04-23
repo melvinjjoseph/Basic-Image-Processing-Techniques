@@ -141,70 +141,37 @@ def crop():
 
     cv2.destroyAllWindows()
 
-#6-Image Resizing
+#5-Image Resizing
 def resize():
-    img = cv2.imread('../Images/6_scenary.jpg')
+    try:
+        # Read image from disk.
+        img = cv2.imread('../Images/10_pig.jpg')
+    
+        # Get number of pixel horizontally and vertically.
 
-    # displaying the image using imshow() function of cv2
-    # In this : 1st argument is name of the frame
-    # 2nd argument is the image matrix
-    cv2.imshow('original image',img)
+        (height, width) = img.shape[:2]
+    
+        # Specify the size of image along with interploation methods.
 
-    # print shape of the image matrix
-    # using shape attribute
-    print("original image shape:",img.shape)
+        # cv2.INTER_AREA is used for shrinking, whereas cv2.INTER_CUBIC
 
-    # assigning number of rows, coulmns and
-    # planes to the respective variables
-    row,col,plane = img.shape
+        # is used for zooming.
 
-    # give value by which you want to resize an image
-    # here we want to resize an image as one half of the original image
-    x, y = 2, 2
+        res = cv2.resize(img, (int(width / 2), int(height / 2)), interpolation = cv2.INTER_CUBIC)
+    
+        # Write image back to disk.
+        cv2.imwrite('../Images/10_result.jpg', res)
 
-    # assign Blue plane of the BGR image
-    # to the blue_plane variable
-    blue_plane = img[:,:,0]
+        #showing the images
+        cv2.imshow('original image',img)
+        cv2.imshow('scaled image',res)   
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        
+    except IOError:
+        print ('Error while reading files !!!') 
 
-    # assign Green plane of the BGR image
-    # to the green_plane variable
-    green_plane = img[:,:,1]
-
-    # assign Red plane of the BGR image
-    # to the red_plane variable
-    red_plane = img[:,:,2]
-
-    # we take one-half pixel of rows and columns from
-    # each plane respectively so that, it is one-half of image matrix.
-
-    # here we take alternate row,column pixel of blue plane.
-    resize_blue_plane = blue_plane[1::x,1::x]
-
-    # here we take alternate row,column pixel of green plane.
-    resize_green_plane = green_plane[1::x,1::x]
-
-    # here we take alternate row,column pixel of red plane.
-    resize_red_plane = red_plane[1::x,1::x]
-
-    # here image is of class 'uint8', the range of values  
-    # that each colour component can have is [0 - 255]
-
-    # create a zero matrix of specified order of 3-dimension
-    resize_img = np.zeros((row//x, col//y, plane),np.uint8)
-
-    # assigning resized blue, green and red plane of image matrix to the
-    # corresponding blue, green, red plane of resize_img matrix variable.
-    resize_img[:,:,0] = resize_blue_plane
-    resize_img[:,:,1] = resize_green_plane
-    resize_img[:,:,2] = resize_red_plane
-
-    cv2.imshow('resize image',resize_img)
-
-    print("resize image shape:",resize_img.shape)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-#7-Image Rotation
+#6-Image Rotation
 def rotation():
             image = cv2.imread('../Images/7_8_emoji.png')
             rotated_image = naive_image_rotate(image,90,'full')
@@ -261,7 +228,7 @@ def naive_image_rotate(image, degrees, option='same'):
                 rot_img[i,j,:] = image[x,y,:]
     return rot_img 
 
-#9-Median Filter
+#7-Median Filter
 def median_filter():
     path = '../Images/9_person.png'
     img = cv2.imread(path)
@@ -282,38 +249,26 @@ def median_filter():
 
     cv2.destroyAllWindows
 
-#10-Image Scaling
-def scaling():
-    try:
-        # Read image from disk.
-        img = cv2.imread('../Images/10_pig.jpg')
+#8-Box Blur Filter
+def box_blur_filter():
+    img = cv2.imread('../Images/5_desktop.jpg')
+    plt.imshow(img)
+    plt.show()
     
-        # Get number of pixel horizontally and vertically.
-
-        (height, width) = img.shape[:2]
+    box_blur_ker = np.array([[0.1111111, 0.1111111, 0.1111111],
+                        [0.1111111, 0.1111111, 0.1111111],
+                        [0.1111111, 0.1111111, 0.1111111]])
     
-        # Specify the size of image along with interploation methods.
-
-        # cv2.INTER_AREA is used for shrinking, whereas cv2.INTER_CUBIC
-
-        # is used for zooming.
-
-        res = cv2.resize(img, (int(width / 2), int(height / 2)), interpolation = cv2.INTER_CUBIC)
+    # Applying Box Blur effect
+    # Using the cv2.filter2D() function
+    # src is the source of image(here, img)
+    # ddepth is destination depth. -1 will mean output image will have same depth as input image
+    # kernel is used for specifying the kernel operation (here, box_blur_ker)
+    Box_blur = cv2.filter2D(src=img, ddepth=-1, kernel=box_blur_ker)
     
-        # Write image back to disk.
-        cv2.imwrite('../Images/10_result.jpg', res)
-
-        
-
-        #showing the images
-        cv2.imshow('original image',img)
-        cv2.imshow('scaled image',res)   
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-  
-    except IOError:
-
-        print ('Error while reading files !!!')        
+    # Showing the box blur image using matplotlib library function plt.imshow()
+    plt.imshow(Box_blur)
+    plt.show()
 
 
 if __name__=='__main__':
@@ -325,9 +280,8 @@ if __name__=='__main__':
         print("4.Image Cropping") 
         print("5.Image Resizing") 
         print("6.Image Rotation")   
-        print("8.Gaussian Filter") 
         print("7.Median Filter") 
-        print("8.Image Scaling") 
+        print("8.Box Blur Filter")
         print("9.Exit")
         choice=int(input("Enter your choice:"))
         if choice==1:
@@ -345,7 +299,7 @@ if __name__=='__main__':
         elif choice==7:
             median_filter()
         elif choice==8:
-            scaling()
+            box_blur_filter()
         elif choice==9:
             break
         else:
