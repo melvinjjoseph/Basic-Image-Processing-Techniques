@@ -19,22 +19,16 @@ def colorfilter():
         newb = 0
         return(newr,newg,newb)
 
-    def darkpink(r,g,b):
-        newr = g
-        newg = b
-        newb = r
-        return(newr,newg,newb)
-
-    def skyblue(r,g,b):
-        newr = b
-        newg = g
-        newb = r
-        return(newr,newg,newb)
-
-    def lemongreen(r,g,b):
-        newr = g
-        newg = r
+    def blue(r,g,b):
+        newr = 0
+        newg = 0
         newb = b
+        return(newr,newg,newb)
+
+    def green(r,g,b):
+        newr = 0
+        newg = g
+        newb = 0
         return(newr,newg,newb)
 
     def grey(r,g,b):
@@ -52,11 +46,10 @@ def colorfilter():
     choice = '''
     enter your choice
     1 red
-    2 darkpink
-    3 skyblue
-    4 lemonyellow
-    5 grey
-    6 sepia
+    2 blue
+    3 green
+    4 grey
+    5 sepia
     '''
 
 
@@ -70,14 +63,12 @@ def colorfilter():
             if no==1:
                 pixels[px,py] = red(r,g,b)
             if no==2:
-                pixels[px,py] = darkpink(r,g,b)
+                pixels[px,py] = blue(r,g,b)
             if no==3:
-                pixels[px,py] = skyblue(r,g,b)
+                pixels[px,py] = green(r,g,b)
             if no==4:
-                pixels[px,py] = lemongreen(r,g,b)
-            if no==5:
                 pixels[px,py] = grey(r,g,b)
-            if no==6:
+            if no==5:
                 pixels[px,py] = sepia(r,g,b)
 
     img.show()
@@ -88,11 +79,11 @@ def grayscale():
     input_image = imread(r"../Images/1_2_rover.jpg")
     r,g,b = input_image[:,:,0],input_image[:,:,1],input_image[:,:,2]
 
-    gamma = 1.04
+    #gamma = 1.04
 
     r_const,g_const,b_const = 0.2126, 0.7152, 0.0722
 
-    grayscale_image = r_const * r ** gamma + g_const * g ** gamma + b_const + b **gamma
+    grayscale_image = r_const * r  + g_const * g  + b_const + b
 
     fig = plt.figure(1)
     img1,img2 = fig.add_subplot(121), fig.add_subplot(122)
